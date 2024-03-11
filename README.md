@@ -5,7 +5,7 @@
 
 ## build:
 
-    `make`
+    make
 
 ## clean:
 
