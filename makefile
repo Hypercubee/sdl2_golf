@@ -4,10 +4,11 @@
 
 CXX = g++
 TARGET = main
+LIB = ./lib/renderlib.cpp
 LFLAGS = -lSDL2 -lSDL2_image
 
 ${TARGET}: ${TARGET}.cpp
-	${CXX} ${TARGET}.cpp ${LFLAGS} -o ${TARGET}
+	${CXX} ${TARGET}.cpp ${LIB} ${LFLAGS} -o ${TARGET}
 
 clean:
 	rm -f ${TARGET}
