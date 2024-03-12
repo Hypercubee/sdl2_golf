@@ -1,5 +1,17 @@
 #include <iostream>
 #include "lib/renderlib.hpp"
+#include <vector>
+
+
+
+//TODO make function to trash the textures before exit
+void loadAssets(SDL_Renderer *renderer, const std::vector<std::string> paths, std::vector<SDL_Texture*>& textures){
+	for(std::string path : paths){
+		SDL_Texture *texture = rn::loadTexture(renderer, path);
+		textures.push_back(texture);
+	}
+}
+
 
 
 
@@ -8,7 +20,17 @@ int SCREEN_HEIGHT = 512;
 
 SDL_Window *g_window;
 SDL_Renderer *g_renderer;
-SDL_Texture* g_image;
+
+std::vector<std::string> assetPaths = {
+	"./assets/flag.png",
+	"./assets/grass-floor.png",
+	"./assets/grass-wall0.png",
+	"./assets/grass-wall1.png",
+	"./assets/grass-wall2.png",
+	"./assets/grass-wall3.png",
+};
+
+std::vector<SDL_Texture*> textures;
 
 void loop();
 void setup();
@@ -33,17 +55,13 @@ int main(){
 //! setup runs once and afterwards loop runs repeatedly
 
 void setup(){
-	g_image = rn::loadTexture(g_renderer, "./assets/flag.png");
-    if (!g_image) {
-        rn::close(g_window, g_renderer);
-        return;
-    }
+	loadAssets(g_renderer, assetPaths, textures);
 }
 
 void loop(){
 	rn::clear(g_renderer, {0,0,0});
-	rn::renderTexture(g_renderer, g_image, 0, 128, 512, 256);
-	rn::renderTexture(g_renderer, g_image, 512-128, 256, 64, 64);
-	rn::renderTexture(g_renderer, g_image, 64, 128, 64, 64);
+	rn::renderTexture(g_renderer, textures.at(1), 0, 128, 512, 256);
+	rn::renderTexture(g_renderer, textures.at(0), 512-128, 256, 64, 64);
+	rn::renderTexture(g_renderer, textures.at(2), 64, 128, 64, 64);
 	SDL_RenderPresent(g_renderer);
 }
