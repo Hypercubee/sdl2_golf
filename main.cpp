@@ -27,13 +27,9 @@ std::vector<std::string> assetPaths = {
 	"./assets/grass-wall3.png",
 };
 
-std::vector<SDL_Texture*> textures;
+std::vector<SDL_Texture*> g_textures;
 
-struct Cell{
-	int x;
-	int y;
-	int tex;
-};
+
 
 
 
@@ -53,20 +49,7 @@ std::pair<int, std::vector<Cell>> readLevelFile(const std::string& filename) {
     return vec;
 }
 
-void drawLevel(SDL_Renderer *renderer, std::pair<int, std::vector<Cell>> level){
-	int& size = level.first;
-	std::vector<Cell>& lvl = level.second;
-	int cellSize = SCREEN_WIDTH / size;
 
-	for(int i = 0; i < size*size; i++){
-		rn::renderTexture(renderer, textures.at(0), (i%size)*cellSize, (i/size)*cellSize, cellSize, cellSize);
-	}
-
-	for(Cell c : lvl){
-		rn::renderTexture(renderer, textures.at(c.tex), c.x * cellSize, c.y * cellSize, cellSize, cellSize);
-	}
-
-}
 
 void loop();
 void setup();
@@ -94,12 +77,12 @@ std::vector<std::pair<int, std::vector<Cell>>> levels;
 
 
 void setup(){
-	rn::loadAssets(g_renderer, assetPaths, textures);
+	rn::loadAssets(g_renderer, assetPaths, g_textures);
 	levels.push_back(readLevelFile("levels/level_02"));
 }
 
 void loop(){
 	rn::clear(g_renderer, {0,0,0});
-	drawLevel(g_renderer, levels[0]);
+	rn::drawLevel(g_renderer, g_textures, levels[0]);
 	SDL_RenderPresent(g_renderer);
 }

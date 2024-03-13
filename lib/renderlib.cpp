@@ -67,4 +67,20 @@ namespace rn{
         SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
     }
 
+
+    // * levels
+    void drawLevel(SDL_Renderer *renderer, std::vector<SDL_Texture*> textures, std::pair<int, std::vector<Cell>> level){
+        int& size = level.first;
+        std::vector<Cell>& lvl = level.second;
+        int cellSize = 512 / size;
+        //! need to fix the number 512 as a variable
+        for(int i = 0; i < size*size; i++){
+            rn::renderTexture(renderer, textures.at(0), (i%size)*cellSize, (i/size)*cellSize, cellSize, cellSize);
+        }
+
+        for(Cell c : lvl){
+            rn::renderTexture(renderer, textures.at(c.tex), c.x * cellSize, c.y * cellSize, cellSize, cellSize);
+        }
+
+    }
 }

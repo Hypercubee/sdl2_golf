@@ -6,7 +6,6 @@
 #include <fstream>
 #include <vector>
 
-namespace rn{
     struct RGBA{
         uint8_t r;
         uint8_t g;
@@ -20,6 +19,13 @@ namespace rn{
         uint8_t b;
     };
 
+    struct Cell{
+        int x;
+        int y;
+        int tex;
+    };
+
+namespace rn{
     // * window management
     /**
      * @brief Initialize SDL and create a window with a renderer.
@@ -81,4 +87,9 @@ namespace rn{
      * @param h height of the texture on screen
      */
     void renderTexture(SDL_Renderer *renderer, SDL_Texture* texture, int x, int y, int width, int height);
+
+
+
+    // * levels
+    void drawLevel(SDL_Renderer *renderer, std::vector<SDL_Texture*> textures, std::pair<int, std::vector<Cell>> level);
 }
