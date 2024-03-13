@@ -37,6 +37,8 @@ namespace rn{
         SDL_RenderClear(renderer);
     }
 
+    // * loading resources
+
     SDL_Texture* loadTexture(SDL_Renderer *renderer, const std::string& path) {
         SDL_Texture* texture = nullptr;
         SDL_Surface* surface = IMG_Load(path.c_str());
@@ -50,6 +52,13 @@ namespace rn{
         }
         SDL_FreeSurface(surface);
         return texture;
+    }
+
+    void loadAssets(SDL_Renderer *renderer, const std::vector<std::string> paths, std::vector<SDL_Texture*>& textures){
+	    for(std::string path : paths){
+		    SDL_Texture *texture = loadTexture(renderer, path);
+		    textures.push_back(texture);
+	    }
     }
 
     void renderTexture(SDL_Renderer *renderer, SDL_Texture* texture, int x, int y, int width, int height) {

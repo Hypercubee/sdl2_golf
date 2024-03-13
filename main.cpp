@@ -1,29 +1,26 @@
 #include <iostream>
 #include "lib/renderlib.hpp"
 #include <vector>
+#include <array>
 
 
 
 //TODO make function to trash the textures before exit
-void loadAssets(SDL_Renderer *renderer, const std::vector<std::string> paths, std::vector<SDL_Texture*>& textures){
-	for(std::string path : paths){
-		SDL_Texture *texture = rn::loadTexture(renderer, path);
-		textures.push_back(texture);
-	}
-}
+
 
 
 
 
 int SCREEN_WIDTH = 512;
-int SCREEN_HEIGHT = 512;
+int SCREEN_HEIGHT = SCREEN_WIDTH;
 
 SDL_Window *g_window;
 SDL_Renderer *g_renderer;
 
 std::vector<std::string> assetPaths = {
-	"./assets/flag.png",
 	"./assets/grass-floor.png",
+	"./assets/flag.png",
+	"./assets/wall.png",
 	"./assets/grass-wall0.png",
 	"./assets/grass-wall1.png",
 	"./assets/grass-wall2.png",
@@ -31,6 +28,45 @@ std::vector<std::string> assetPaths = {
 };
 
 std::vector<SDL_Texture*> textures;
+
+struct Cell{
+	int x;
+	int y;
+	int tex;
+};
+
+
+
+std::pair<int, std::vector<Cell>> readLevelFile(const std::string& filename) {
+    std::pair<int, std::vector<Cell>> vec;
+    std::ifstream file(filename, std::ios::binary | std::ios::ate);
+    if (file.is_open()) {
+        std::streamsize size = file.tellg();
+        file.seekg(0, std::ios::beg);
+		file.read(reinterpret_cast<char*>(&vec.first), sizeof(vec.first));
+        vec.second.resize(size / sizeof(Cell));
+        file.read(reinterpret_cast<char*>(vec.second.data()), size);
+        file.close();
+    } else {
+        std::cout << "Unable to open file for reading: " << filename << std::endl;
+    }
+    return vec;
+}
+
+void drawLevel(SDL_Renderer *renderer, std::pair<int, std::vector<Cell>> level){
+	int& size = level.first;
+	std::vector<Cell>& lvl = level.second;
+	int cellSize = SCREEN_WIDTH / size;
+
+	for(int i = 0; i < size*size; i++){
+		rn::renderTexture(renderer, textures.at(0), (i%size)*cellSize, (i/size)*cellSize, cellSize, cellSize);
+	}
+
+	for(Cell c : lvl){
+		rn::renderTexture(renderer, textures.at(c.tex), c.x * cellSize, c.y * cellSize, cellSize, cellSize);
+	}
+
+}
 
 void loop();
 void setup();
@@ -54,14 +90,16 @@ int main(){
 
 //! setup runs once and afterwards loop runs repeatedly
 
+std::vector<std::pair<int, std::vector<Cell>>> levels;
+
+
 void setup(){
-	loadAssets(g_renderer, assetPaths, textures);
+	rn::loadAssets(g_renderer, assetPaths, textures);
+	levels.push_back(readLevelFile("levels/level_02"));
 }
 
 void loop(){
 	rn::clear(g_renderer, {0,0,0});
-	rn::renderTexture(g_renderer, textures.at(1), 0, 128, 512, 256);
-	rn::renderTexture(g_renderer, textures.at(0), 512-128, 256, 64, 64);
-	rn::renderTexture(g_renderer, textures.at(2), 64, 128, 64, 64);
+	drawLevel(g_renderer, levels[0]);
 	SDL_RenderPresent(g_renderer);
 }

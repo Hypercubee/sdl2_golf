@@ -3,7 +3,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-
+#include <fstream>
+#include <vector>
 
 namespace rn{
     struct RGBA{
@@ -40,7 +41,7 @@ namespace rn{
      */
     void close(SDL_Window *window, SDL_Renderer *renderer);
 
-    //  * renderer functions
+    // * renderer functions
     /**
      * @brief clears whole screen with set color
      * 
@@ -48,6 +49,8 @@ namespace rn{
      * @param color color to clear with
     */
     void clear(SDL_Renderer *renderer, RGB color = {255,255,255});
+
+    // * loading resources
 
     /**
      * @brief clears whole screen with set color
@@ -57,6 +60,15 @@ namespace rn{
      * @return loaded texture
     */
     SDL_Texture* loadTexture(SDL_Renderer *renderer, const std::string& path);
+
+    /**
+     * @brief loads a vector of paths as textures
+     * 
+     * @param renderer pointer to SDL renderer
+     * @param path vector of paths to the image files
+     * @param textures vector into which the textures will be loaded
+    */
+    void loadAssets(SDL_Renderer *renderer, const std::vector<std::string> paths, std::vector<SDL_Texture*>& textures);
 
     /**
      * @brief Renders a texture to the screen.
