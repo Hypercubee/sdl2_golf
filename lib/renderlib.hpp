@@ -92,4 +92,5 @@ namespace rn{
 
     // * levels
     void drawLevel(SDL_Renderer *renderer, std::vector<SDL_Texture*> textures, std::pair<int, std::vector<Cell>> level);
+    std::pair<int, std::vector<Cell>> readLevelFile(const std::string& filename);
 }

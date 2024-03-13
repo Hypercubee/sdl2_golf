@@ -3,13 +3,7 @@
 #include <vector>
 #include <array>
 
-
-
 //TODO make function to trash the textures before exit
-
-
-
-
 
 int SCREEN_WIDTH = 512;
 int SCREEN_HEIGHT = SCREEN_WIDTH;
@@ -28,28 +22,6 @@ std::vector<std::string> assetPaths = {
 };
 
 std::vector<SDL_Texture*> g_textures;
-
-
-
-
-
-std::pair<int, std::vector<Cell>> readLevelFile(const std::string& filename) {
-    std::pair<int, std::vector<Cell>> vec;
-    std::ifstream file(filename, std::ios::binary | std::ios::ate);
-    if (file.is_open()) {
-        std::streamsize size = file.tellg();
-        file.seekg(0, std::ios::beg);
-		file.read(reinterpret_cast<char*>(&vec.first), sizeof(vec.first));
-        vec.second.resize(size / sizeof(Cell));
-        file.read(reinterpret_cast<char*>(vec.second.data()), size);
-        file.close();
-    } else {
-        std::cout << "Unable to open file for reading: " << filename << std::endl;
-    }
-    return vec;
-}
-
-
 
 void loop();
 void setup();
@@ -75,10 +47,9 @@ int main(){
 
 std::vector<std::pair<int, std::vector<Cell>>> levels;
 
-
 void setup(){
 	rn::loadAssets(g_renderer, assetPaths, g_textures);
-	levels.push_back(readLevelFile("levels/level_02"));
+	levels.push_back(rn::readLevelFile("levels/level_02"));
 }
 
 void loop(){

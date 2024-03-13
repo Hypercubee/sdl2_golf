@@ -77,10 +77,23 @@ namespace rn{
         for(int i = 0; i < size*size; i++){
             rn::renderTexture(renderer, textures.at(0), (i%size)*cellSize, (i/size)*cellSize, cellSize, cellSize);
         }
-
         for(Cell c : lvl){
             rn::renderTexture(renderer, textures.at(c.tex), c.x * cellSize, c.y * cellSize, cellSize, cellSize);
         }
-
+    }
+    std::pair<int, std::vector<Cell>> readLevelFile(const std::string& filename) {
+        std::pair<int, std::vector<Cell>> vec;
+        std::ifstream file(filename, std::ios::binary | std::ios::ate);
+        if (file.is_open()) {
+            std::streamsize size = file.tellg();
+            file.seekg(0, std::ios::beg);
+            file.read(reinterpret_cast<char*>(&vec.first), sizeof(vec.first));
+            vec.second.resize(size / sizeof(Cell));
+            file.read(reinterpret_cast<char*>(vec.second.data()), size);
+            file.close();
+        } else {
+            std::cout << "Unable to open file for reading: " << filename << std::endl;
+        }
+        return vec;
     }
 }
