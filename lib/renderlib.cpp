@@ -69,7 +69,7 @@ namespace rn{
 
 
     // * levels
-    void drawLevel(SDL_Renderer *renderer, std::vector<SDL_Texture*> textures, std::pair<int, std::vector<Cell>> level){
+    void drawLevel(SDL_Renderer *renderer, std::vector<SDL_Texture*>& textures, std::pair<int, std::vector<Cell>>& level){
         int& size = level.first;
         std::vector<Cell>& lvl = level.second;
         int cellSize = 512 / size;
@@ -92,7 +92,7 @@ namespace rn{
             file.read(reinterpret_cast<char*>(vec.second.data()), size);
             file.close();
         } else {
-            std::cout << "Unable to open file for reading: " << filename << std::endl;
+            std::cout << "Unable to open file for readingtexture: " << filename << std::endl;
         }
         return vec;
     }
