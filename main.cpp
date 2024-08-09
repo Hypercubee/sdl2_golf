@@ -3,31 +3,20 @@
 #include <vector>
 #include <array>
 
-//TODO make function to trash the textures before exit
 
-int SCREEN_WIDTH = 512;
-int SCREEN_HEIGHT = SCREEN_WIDTH;
+int SCREEN_WIDTH = 600;
+int SCREEN_HEIGHT = 600;
 
 SDL_Window *g_window;
 SDL_Renderer *g_renderer;
 
-std::vector<std::string> assetPaths = {
-	"./assets/grass-floor.png",
-	"./assets/flag.png",
-	"./assets/wall.png",
-	"./assets/grass-wall0.png",
-	"./assets/grass-wall1.png",
-	"./assets/grass-wall2.png",
-	"./assets/grass-wall3.png",
-};
 
-std::vector<SDL_Texture*> g_textures;
 
 void loop();
 void setup();
 
 int main(){
-	if (rn::init("lsd2", g_window, g_renderer, SCREEN_WIDTH, SCREEN_HEIGHT) != 0) return 1;
+	if (rn::init("golf", g_window, g_renderer, SCREEN_WIDTH, SCREEN_HEIGHT) != 0) return -1;
 	int f = 0;
 	setup();
 	SDL_Event e;
@@ -45,6 +34,18 @@ int main(){
 
 //! setup runs once and afterwards loop runs repeatedly
 
+std::vector<std::string> assetPaths = {
+	"./assets/grass-floor.png",
+	"./assets/flag.png",
+	"./assets/wall.png",
+	"./assets/grass-wall0.png",
+	"./assets/grass-wall1.png",
+	"./assets/grass-wall2.png",
+	"./assets/grass-wall3.png",
+};
+
+std::vector<SDL_Texture*> g_textures;
+
 std::vector<std::pair<int, std::vector<Cell>>> levels;
 
 void setup(){
@@ -54,6 +55,6 @@ void setup(){
 
 void loop(){
 	rn::clear(g_renderer, {0,0,0});
-	rn::drawLevel(g_renderer, g_textures, levels[0]);
+	rn::drawLevel(g_renderer, g_window, g_textures, levels[0]);
 	SDL_RenderPresent(g_renderer);
 }

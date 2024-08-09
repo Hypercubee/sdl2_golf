@@ -7,17 +7,17 @@ namespace rn{
     int init(const char *name, SDL_Window *&window, SDL_Renderer *&renderer, int width, int height){
         if (SDL_Init(SDL_INIT_VIDEO) < 0){
             std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
-            return 1;
+            return -1;
         }
         window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
         if (!window){
             std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
-            return 1;
+            return -1;
         }
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         if (!renderer){
             std::cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
-            return 1;
+            return -1;
         }
         return 0;
     }
@@ -55,10 +55,15 @@ namespace rn{
     }
 
     void loadAssets(SDL_Renderer *renderer, const std::vector<std::string> paths, std::vector<SDL_Texture*>& textures){
-	    for(std::string path : paths){
-		    SDL_Texture *texture = loadTexture(renderer, path);
-		    textures.push_back(texture);
+	    for(const std::string& path : paths){
+		    textures.push_back(loadTexture(renderer, path));
 	    }
+    }
+
+    void destroyAssets(std::vector<SDL_Texture*>& textures){
+        for(SDL_Texture* texture : textures){
+            SDL_DestroyTexture(texture);
+        }
     }
 
     void renderTexture(SDL_Renderer *renderer, SDL_Texture* texture, int x, int y, int width, int height) {
@@ -68,11 +73,16 @@ namespace rn{
     }
 
 
+
+
     // * levels
-    void drawLevel(SDL_Renderer *renderer, std::vector<SDL_Texture*>& textures, std::pair<int, std::vector<Cell>>& level){
+    void drawLevel(SDL_Renderer *renderer, SDL_Window* window, std::vector<SDL_Texture*>& textures, std::pair<int, std::vector<Cell>>& level){
         int& size = level.first;
         std::vector<Cell>& lvl = level.second;
-        int cellSize = 512 / size;
+        int w;
+	    int h;
+	    SDL_GetWindowSize(window, &w, &h);
+        int cellSize = w / size;
         //! need to fix the number 512 as a variable
         for(int i = 0; i < size*size; i++){
             rn::renderTexture(renderer, textures.at(0), (i%size)*cellSize, (i/size)*cellSize, cellSize, cellSize);
@@ -82,18 +92,18 @@ namespace rn{
         }
     }
     std::pair<int, std::vector<Cell>> readLevelFile(const std::string& filename) {
-        std::pair<int, std::vector<Cell>> vec;
+        std::pair<int, std::vector<Cell>> pair;
         std::ifstream file(filename, std::ios::binary | std::ios::ate);
         if (file.is_open()) {
             std::streamsize size = file.tellg();
             file.seekg(0, std::ios::beg);
-            file.read(reinterpret_cast<char*>(&vec.first), sizeof(vec.first));
-            vec.second.resize(size / sizeof(Cell));
-            file.read(reinterpret_cast<char*>(vec.second.data()), size);
+            file.read(reinterpret_cast<char*>(&pair.first), sizeof(pair.first));
+            pair.second.resize(size / sizeof(Cell));
+            file.read(reinterpret_cast<char*>(pair.second.data()), size);
             file.close();
         } else {
             std::cout << "Unable to open file for readingtexture: " << filename << std::endl;
         }
-        return vec;
+        return pair;
     }
 }

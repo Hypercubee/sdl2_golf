@@ -59,7 +59,7 @@ namespace rn{
     // * loading resources
 
     /**
-     * @brief clears whole screen with set color
+     * @brief loads a texture
      * 
      * @param renderer pointer to SDL renderer
      * @param path path to the image file
@@ -75,6 +75,13 @@ namespace rn{
      * @param textures vector into which the textures will be loaded
     */
     void loadAssets(SDL_Renderer *renderer, const std::vector<std::string> paths, std::vector<SDL_Texture*>& textures);
+
+    /**
+     * @brief destroys std vector of textures
+     * 
+     * @param textures vector into which the textures will be loaded
+    */
+   void destroyAssets(std::vector<SDL_Texture*>& textures);
 
     /**
      * @brief Renders a texture to the screen.
@@ -93,12 +100,13 @@ namespace rn{
     // * levels
 
     /**
-     * @brief Renders a texture to the screen.
+     * @brief draws a level onto screen.
      * 
      * @param renderer pointer to SDL renderer
-     * @param textures vector of textures
-     * @param x x coord of the texture on screen
+     * @param window pointer to SDL window
+     * @param textures vector of textures with assets
+     * @param level level to draw
      */
-    void drawLevel(SDL_Renderer *renderer, std::vector<SDL_Texture*>& textures, std::pair<int, std::vector<Cell>>& level);
+    void drawLevel(SDL_Renderer *renderer, SDL_Window* window, std::vector<SDL_Texture*>& textures, std::pair<int, std::vector<Cell>>& level);
     std::pair<int, std::vector<Cell>> readLevelFile(const std::string& filename);
 }
