@@ -30,8 +30,6 @@ public:
 			return {point, t, true, Vec2(0, 0)};
 		}
 	}
-}
-}
-;
+};
 
 #endif
