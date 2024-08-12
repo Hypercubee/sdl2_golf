@@ -58,16 +58,16 @@ void setup() {}
 
 Line l1 = Line({100, 300}, {550, 350});
 Line l2 = Line({350, 550}, {300, 100});
-
+Circle c = Circle({300, 300}, 100);
 
 void handleEvent(SDL_Event &e) {
 	switch(e.type) {
 		case SDL_MOUSEBUTTONDOWN:
 			if(e.button.button == SDL_BUTTON_LEFT) {
-				l1.start = Vec2(e.button.x, e.button.y);
+				l1.end = Vec2(e.button.x, e.button.y);
 			}
 			if(e.button.button == SDL_BUTTON_RIGHT) {
-				l2.start = Vec2(e.button.x, e.button.y);
+				l1.start = Vec2(e.button.x, e.button.y);
 			}
 	}
 }
@@ -78,9 +78,11 @@ void loop() {
 	
 
 	drawLine(g_renderer, l1, {255, 0, 0});
-	drawLine(g_renderer, l2, {0, 255, 0});
+	//drawLine(g_renderer, l2, {0, 255, 0});
 
-	Intersection i = l1.intersects(l2);
+	drawCircle(g_renderer, c.center, c.radius, {255, 255, 255});
+
+	Intersection i = l1.intersects(c);
 
 	if(i.exists) {
 		drawCircle(g_renderer, i.point, 7, {0, 255, 255});
