@@ -31,7 +31,7 @@ int main() {
 	return 0;
 }
 
-void drawLine(SDL_Renderer *renderer, Line& l, SDL_Color color) {
+void drawLine(SDL_Renderer *renderer, Line &l, SDL_Color color) {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
 	SDL_RenderDrawLine(renderer, l.start.x, l.start.y, l.end.x, l.end.y);
 }
@@ -43,7 +43,7 @@ void drawCircle(SDL_Renderer *renderer, Vec2 center, double r, SDL_Color color) 
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
 	SDL_RenderDrawLine(renderer, center.x, center.y, p1.x, p1.y);
 	angle += increment;
-	for(int i = 0; i < 100; i++){
+	for(int i = 0; i < 100; i++) {
 		Vec2 p2 = Vec2(center.x + r * cos(angle), center.y + r * sin(angle));
 		SDL_RenderDrawLine(renderer, p1.x, p1.y, p2.x, p2.y);
 		p1 = p2;
@@ -53,9 +53,7 @@ void drawCircle(SDL_Renderer *renderer, Vec2 center, double r, SDL_Color color) 
 
 //! setup runs once and afterwards loop runs repeatedly
 
-void setup() {
-	
-}
+void setup() {}
 
 Line l1 = Line({100, 300}, {550, 350});
 Line l2 = Line({350, 550}, {300, 100});
@@ -63,9 +61,14 @@ Line l2 = Line({350, 550}, {300, 100});
 void loop() {
 	rn::clear(g_renderer, {0, 0, 0});
 
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+
+	l1.end = Vec2(x, y);
+
 	drawLine(g_renderer, l1, {255, 0, 0});
 	drawLine(g_renderer, l2, {0, 255, 0});
-	
+
 	Intersection i = l1.intersects(l2);
 
 	if(i.exists) {

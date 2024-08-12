@@ -2,7 +2,7 @@
 #define INTERSECTION_HPP
 #include "vector.hpp"
 
-struct Intersection{
+struct Intersection {
 	Vec2 point;
 	double t;
 	bool exists;
@@ -10,6 +10,5 @@ struct Intersection{
 	Intersection() : point(Vec2()), t(0), exists(false), normal(Vec2()) {}
 	Intersection(Vec2 point, double t, bool exists, Vec2 normal) : point(point), t(t), exists(exists), normal(normal) {}
 };
-
 
 #endif

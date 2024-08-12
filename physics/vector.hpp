@@ -6,7 +6,7 @@
 class Vec2 {
 public:
 	double x, y;
-	
+
 	Vec2() : x(0), y(0) {}
 	Vec2(int x, int y) : x(x), y(y) {}
 
@@ -55,7 +55,7 @@ public:
 	Vec2 leftNormal() const { return Vec2(y, -x); }
 
 	// scalar functions
-	
+
 	double length() const { return sqrt(x * x + y * y); }
 	double length2() const { return x * x + y * y; }
 
