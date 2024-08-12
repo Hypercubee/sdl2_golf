@@ -13,7 +13,7 @@ SDL_Renderer *g_renderer;
 
 void loop();
 void setup();
-
+void handleEvent(SDL_Event &e);
 int main() {
 	if(rn::init("golf", g_window, g_renderer, SCREEN_WIDTH, SCREEN_HEIGHT) != 0) return -1;
 	int f = 0;
@@ -25,6 +25,7 @@ int main() {
 		if(f % 4 == 0) loop();
 		while(SDL_PollEvent(&e)) {
 			if(e.type == SDL_QUIT) quit = true;
+			handleEvent(e);
 		}
 		f++;
 	}
@@ -58,13 +59,23 @@ void setup() {}
 Line l1 = Line({100, 300}, {550, 350});
 Line l2 = Line({350, 550}, {300, 100});
 
+
+void handleEvent(SDL_Event &e) {
+	switch(e.type) {
+		case SDL_MOUSEBUTTONDOWN:
+			if(e.button.button == SDL_BUTTON_LEFT) {
+				l1.start = Vec2(e.button.x, e.button.y);
+			}
+			if(e.button.button == SDL_BUTTON_RIGHT) {
+				l2.start = Vec2(e.button.x, e.button.y);
+			}
+	}
+}
+
 void loop() {
 	rn::clear(g_renderer, {0, 0, 0});
 
-	int x, y;
-	SDL_GetMouseState(&x, &y);
-
-	l1.end = Vec2(x, y);
+	
 
 	drawLine(g_renderer, l1, {255, 0, 0});
 	drawLine(g_renderer, l2, {0, 255, 0});

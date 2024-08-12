@@ -16,20 +16,20 @@ public:
 	Vec2 rightNormal() const { return Vec2(start.y - end.y, end.x - start.x).leftNormal(); }
 
 	Intersection intersects(const Line& l) const {
-		Vec2 p1 = l.start;
-		Vec2 p2 = l.end;
-		Vec2 q1 = start;
-		Vec2 q2 = end;
+		Vec2 p1 = start;
+		Vec2 p2 = end;
+		Vec2 q1 = l.start;
+		Vec2 q2 = l.end;
 		Vec2 r = p2 - p1;
 		Vec2 s = q2 - q1;
-		Vec2 norm = r.rightNormal().normalize();
-		if(dot(s, norm) > 0) return {};
+		Vec2 norm = s.rightNormal().normalize();
+		//if(dot(s, norm) > 0) return {};
 		double rxs = r.x * s.y - r.y * s.x;
 		if(rxs == 0) return {};
 		double t = ((q1.x - p1.x) * s.y - (q1.y - p1.y) * s.x) / rxs;
 		double u = ((q1.x - p1.x) * r.y - (q1.y - p1.y) * r.x) / rxs;
+		if(u < 0 || u > 1) return {};
 		Vec2 point = Vec2(p1.x + t * r.x, p1.y + t * r.y);
-		// if (dot(point - p1, norm) > 0) return {};
 		return {point, t, true, norm};
 	}
 };
